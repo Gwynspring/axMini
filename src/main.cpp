@@ -1,6 +1,6 @@
-#include "axMini/Variable.hpp"
 #include "axMini/VariableEngine.hpp"
 #include "httplib.h"
+#include "nlohmann/json.hpp"
 
 int main() {
   VariableEngine engine;
@@ -45,6 +45,33 @@ int main() {
                               "application/json");
             }
           });
+
+  svr.Put("/variables/:name", [&engine](const httplib::Request &req,
+                                        httplib::Response &res) {
+    try {
+      auto body = nlohmann::json::parse(req.body);
+      auto val = body["value"];
+
+      std::string name = req.path_params.at("name");
+
+      bool success = false;
+
+      if (val.is_number_integer()) {
+        success = engine.WriteVariable(name, val.get<int>());
+      } else if (val.is_number_float()) {
+        success = engine.WriteVariable(name, val.get<float>());
+      } else if (val.is_boolean()) {
+        success = engine.WriteVariable(name, val.get<bool>());
+      }
+
+      res.status = success ? 200 : 404;
+      res.set_content(body.dump(), "application/json");
+
+    } catch (const nlohmann::json::parse_error &e) {
+      res.set_content("{\"error\": \"invalid JSON\"}", "application/json");
+      return;
+    }
+  });
 
   svr.listen("0.0.0.0", 8080);
   return 0;
