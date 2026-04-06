@@ -9,10 +9,14 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS YES)
 
-add_executable(axMini src/main.cpp)
+add_executable(axMini
+  src/main.cpp
+  src/VariableEngine.cpp
+)
 
 target_include_directories(
   axMini
-  PRIVATE ${CMAKE_SOURCE_DIR}/lib/cpp-httplib
+  PRIVATE
+    ${CMAKE_SOURCE_DIR}/lib/cpp-httplib
+    ${CMAKE_SOURCE_DIR}/include
 )
-
