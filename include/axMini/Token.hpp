@@ -9,7 +9,10 @@ enum class TokenType {
   kColon,
   kEquals,
   kValue,
-  kEndOfStatement
+  kEndOfStatement,
+  kIntValue,
+  kFloatValue,
+  kBoolValue
 };
 
 struct Token {

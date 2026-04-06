@@ -51,11 +51,11 @@ std::vector<Token> Lexer::Tokenize(const std::string &input) {
         token.push_back(Token(TokenType::kType, "BOOL"));
       } else {
         if (word == "true" || word == "false") {
-          token.push_back(Token(TokenType::kValue, word));
+          token.push_back(Token(TokenType::kBoolValue, word));
         } else if (word.find('.') != std::string::npos) {
-          token.push_back(Token(TokenType::kValue, word));
+          token.push_back(Token(TokenType::kFloatValue, word));
         } else if (is_number(word)) {
-          token.push_back(Token(TokenType::kValue, word));
+          token.push_back(Token(TokenType::kIntValue, word));
         } else {
           token.push_back(Token(TokenType::kIdentifier, word));
         }
