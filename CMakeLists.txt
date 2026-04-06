@@ -14,6 +14,14 @@ add_executable(axMini
   src/VariableEngine.cpp
 )
 
+target_compile_options(
+  axMini
+  PRIVATE
+    -Wall
+    -Wextra
+    -Wpedantic
+)
+
 target_include_directories(
   axMini
   PRIVATE

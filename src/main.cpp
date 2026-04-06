@@ -1,3 +1,4 @@
+#include "axMini/Variable.hpp"
 #include "axMini/VariableEngine.hpp"
 #include "httplib.h"
 #include "nlohmann/json.hpp"
@@ -12,39 +13,25 @@ int main() {
   engine.AddVariable(input);
   engine.AddVariable(output);
 
-  svr.Get("/variables/:name",
-          [&engine](const httplib::Request &req, httplib::Response &res) {
-            std::string name = req.path_params.at("name");
+  svr.Get("/variables/:name", [&engine](const httplib::Request &req,
+                                        httplib::Response &res) {
+    std::string name = req.path_params.at("name");
 
-            auto it = engine.GetVariable(name);
-            std::string str_val;
+    auto it = engine.GetVariable(name);
 
-            std::string json;
-            if (it.has_value()) {
-              auto val = it->value;
-
-              if (std::holds_alternative<int>(val)) {
-                str_val += std::to_string(get<int>(val));
-              }
-
-              if (std::holds_alternative<float>(val)) {
-                str_val += std::to_string(get<float>(val));
-              }
-
-              if (std::holds_alternative<bool>(val)) {
-                str_val += std::to_string(get<bool>(val));
-              }
-
-              json += "{\"name\": \"" + it->name + "\", \"value\": \"" +
-                      str_val + "\"}";
-
-              res.set_content(json, "application/json");
-            } else {
-              res.status = 404;
-              res.set_content("{\"error\": \"variable not found\"}",
-                              "application/json");
-            }
-          });
+    if (it.has_value()) {
+      nlohmann::json j;
+      std::visit([&j](auto val) { j["value"] = val; }, it->value);
+      j["name"] = it->name;
+      j["variable_typ"] = Variable::variableTypeToString(it->variable_typ);
+      res.status = 200;
+      res.set_content(j.dump(), "application/json");
+    } else {
+      res.status = 404;
+      res.set_content("{\"error\": \"variable not found\"}",
+                      "application/json");
+    }
+  });
 
   svr.Put("/variables/:name", [&engine](const httplib::Request &req,
                                         httplib::Response &res) {
