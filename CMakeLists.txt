@@ -19,4 +19,5 @@ target_include_directories(
   PRIVATE
     ${CMAKE_SOURCE_DIR}/lib/cpp-httplib
     ${CMAKE_SOURCE_DIR}/include
+    ${CMAKE_SOURCE_DIR}/lib/nlohmann-json/single_include
 )
