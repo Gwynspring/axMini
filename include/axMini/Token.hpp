@@ -15,4 +15,6 @@ enum class TokenType {
 struct Token {
   TokenType token_type;
   std::string value;
+  Token(TokenType type, std::string val)
+      : token_type(type), value(std::move(val)) {};
 };

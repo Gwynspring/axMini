@@ -29,3 +29,23 @@ target_include_directories(
     ${CMAKE_SOURCE_DIR}/include
     ${CMAKE_SOURCE_DIR}/lib/nlohmann-json/single_include
 )
+
+add_executable(test_lexer
+  src/VariableEngine.cpp
+  src/Lexer.cpp
+  tests/test_lexer.cpp
+)
+
+target_compile_options(
+  test_lexer
+  PRIVATE
+    -Wall
+    -Wextra
+    -Wpedantic
+)
+
+target_include_directories(
+  test_lexer
+  PRIVATE
+    ${CMAKE_SOURCE_DIR}/include
+)
