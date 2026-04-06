@@ -1,19 +1,7 @@
 #pragma once
 
+#include "axMini/Types.hpp"
 #include <string>
-
-enum class TokenType {
-  kKeyWord,
-  kIdentifier,
-  kType,
-  kColon,
-  kEquals,
-  kValue,
-  kEndOfStatement,
-  kIntValue,
-  kFloatValue,
-  kBoolValue
-};
 
 struct Token {
   TokenType token_type;

@@ -1,13 +1,8 @@
 #pragma once
 
+#include "Types.hpp"
 #include <string>
 #include <variant>
-
-enum class VariableType {
-  kInput,
-  kOutput,
-  kIntern,
-};
 
 struct Variable {
   VariableType variable_typ;
