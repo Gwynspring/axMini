@@ -7,8 +7,8 @@ int main() {
   VariableEngine engine;
   httplib::Server svr;
 
-  Variable input(VariableType::Input, "input_test", 42);
-  Variable output(VariableType::Output, "output_test", true);
+  Variable input(VariableType::kInput, "input_test", 42);
+  Variable output(VariableType::kOutput, "output_test", true);
 
   engine.AddVariable(input);
   engine.AddVariable(output);

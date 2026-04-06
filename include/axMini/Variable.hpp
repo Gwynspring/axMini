@@ -4,9 +4,9 @@
 #include <variant>
 
 enum class VariableType {
-  Input,
-  Output,
-  Intern,
+  kInput,
+  kOutput,
+  kIntern,
 };
 
 struct Variable {
@@ -17,12 +17,12 @@ struct Variable {
       : variable_typ(typ), name(std::move(n)), value(std::move(val)) {}
   static std::string variableTypeToString(VariableType type) {
     switch (type) {
-    case VariableType::Input:
-      return "Input";
-    case VariableType::Output:
-      return "Output";
-    case VariableType::Intern:
-      return "Intern";
+    case VariableType::kInput:
+      return "kInput";
+    case VariableType::kOutput:
+      return "kOutput";
+    case VariableType::kIntern:
+      return "kIntern";
     }
     __builtin_unreachable();
   }
