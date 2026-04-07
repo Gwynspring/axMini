@@ -18,6 +18,8 @@ target_include_directories(axMini_options INTERFACE
 add_executable(axMini
   src/main.cpp
   src/VariableEngine.cpp
+  src/Lexer.cpp
+  src/Parser.cpp
 )
 
 target_include_directories(
@@ -31,6 +33,7 @@ target_link_libraries(axMini PRIVATE axMini_options)
 
 add_executable(test_lexer
   src/Lexer.cpp
+  src/Parser.cpp
   tests/test_lexer.cpp
 )
 

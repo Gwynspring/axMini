@@ -1,13 +1,15 @@
 #include "axMini/Lexer.hpp"
+#include "axMini/Parser.hpp"
 #include "axMini/Token.hpp"
 #include <cassert>
 #include <iostream>
+#include <string>
 #include <vector>
 
 #define assertm(exp, msg) assert((void(msg), exp))
 
 int main() {
-  std::string input = "VAR motor_speed : INT = 0;";
+  std::string input = "VAR motor_speed : INT = 42;";
 
   Lexer lex;
   std::vector<Token> t = lex.Tokenize(input);
@@ -27,9 +29,18 @@ int main() {
   assert(t.at(5).token_type == TokenType::kIntValue);
   std::cout << "Checkpoint #5\n";
 
-  assert(t.at(5).value == "0");
+  assert(t.at(5).value == "42");
   std::cout << "Checkpoint #6\n";
 
   assert(t.back().token_type == TokenType::kEndOfStatement);
   std::cout << "Checkpoint #7\n";
+
+  Parser p;
+  std::vector<VarDeclaration> vd = p.Parse(t);
+
+  assert(vd.at(0).name == "motor_speed");
+  std::cout << "Checkpoint #8\n";
+
+  assert(std::get<int>(vd.at(0).initial_value) == 42);
+  std::cout << "Checkpoint #9\n";
 }
