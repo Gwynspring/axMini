@@ -22,7 +22,7 @@ int main() {
       nlohmann::json j;
       std::visit([&j](auto val) { j["value"] = val; }, it->value);
       j["name"] = it->name;
-      j["variable_typ"] = Variable::variableTypeToString(it->variable_typ);
+      j["variable_typ"] = Variable::VariableTypeToString(it->variable_typ);
       res.status = 200;
       res.set_content(j.dump(), "application/json");
     } else {

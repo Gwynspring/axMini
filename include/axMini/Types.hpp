@@ -1,10 +1,7 @@
 #pragma once
 
-enum class VariableType {
-  kInput,
-  kOutput,
-  kIntern,
-};
+#include <optional>
+#include <string>
 
 enum class TokenType {
   kKeyWord,
@@ -12,9 +9,27 @@ enum class TokenType {
   kType,
   kColon,
   kEquals,
-  kValue,
   kEndOfStatement,
   kIntValue,
   kFloatValue,
   kBoolValue
 };
+
+enum class VariableType {
+  kInput,
+  kOutput,
+  kIntern,
+};
+
+enum class DataType { kInt, kFloat, kBool };
+
+inline std::optional<DataType> DataTypeFromString(const std::string &s) {
+  if (s == "INT") {
+    return DataType::kInt;
+  } else if (s == "FLOAT") {
+    return DataType::kFloat;
+  } else if (s == "BOOL") {
+    return DataType::kBool;
+  }
+  return std::nullopt;
+}

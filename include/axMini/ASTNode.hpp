@@ -6,6 +6,8 @@
 
 struct VarDeclaration {
   std::string name;
-  VariableType type;
+  DataType type;
   std::variant<int, float, bool> initial_value;
+  VarDeclaration(std::string n, DataType t, std::variant<int, float, bool> val)
+      : name(n), type(t), initial_value(val) {};
 };
