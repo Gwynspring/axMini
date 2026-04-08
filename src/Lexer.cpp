@@ -2,7 +2,7 @@
 #include "axMini/Token.hpp"
 #include <string>
 
-bool Lexer::is_number(const std::string &s) {
+bool Lexer::IsNumber(const std::string &s) {
   std::string::const_iterator it = s.begin();
   while (it != s.end() && std::isdigit(*it))
     ++it;
@@ -54,7 +54,7 @@ std::vector<Token> Lexer::Tokenize(const std::string &input) {
           token.push_back(Token(TokenType::kBoolValue, word));
         } else if (word.find('.') != std::string::npos) {
           token.push_back(Token(TokenType::kFloatValue, word));
-        } else if (is_number(word)) {
+        } else if (IsNumber(word)) {
           token.push_back(Token(TokenType::kIntValue, word));
         } else {
           token.push_back(Token(TokenType::kIdentifier, word));

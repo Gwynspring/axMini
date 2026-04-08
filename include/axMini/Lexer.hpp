@@ -9,5 +9,5 @@ public:
   std::vector<Token> Tokenize(const std::string &input);
 
 private:
-  bool is_number(const std::string &s);
+  bool IsNumber(const std::string &s);
 };

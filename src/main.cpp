@@ -2,6 +2,7 @@
 #include "httplib.h"
 #include "nlohmann/json.hpp"
 #include <chrono>
+#include <iostream>
 #include <stop_token>
 #include <thread>
 #include <vector>
@@ -46,14 +47,19 @@ int main() {
 
       bool success = false;
 
-      if (val.is_number_integer()) {
+      if (val.IsNumber_integer()) {
         success = engine.WriteVariable(name, val.get<int>());
-      } else if (val.is_number_float()) {
+      } else if (val.IsNumber_float()) {
         success = engine.WriteVariable(name, val.get<float>());
       } else if (val.is_boolean()) {
         success = engine.WriteVariable(name, val.get<bool>());
+      } else if (!val.IsNumber_integer() && !val.IsNumber_float() &&
+                 !val.is_boolean()) {
+        res.status = 400;
+        res.set_content("{\"error\": \"unsupported value type\"}",
+                        "application/json");
+        return;
       }
-
       res.status = success ? 200 : 404;
       res.set_content(body.dump(), "application/json");
 

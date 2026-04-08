@@ -1,6 +1,5 @@
 #include "axMini/VariableEngine.hpp"
 #include <mutex>
-#include <vector>
 
 void VariableEngine::AddVariable(const Variable &var) {
   std::lock_guard<std::mutex> lock(mutex_);
