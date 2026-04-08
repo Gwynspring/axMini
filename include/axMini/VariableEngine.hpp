@@ -4,11 +4,13 @@
 #include <mutex>
 #include <optional>
 #include <unordered_map>
+#include <vector>
 
 class VariableEngine {
 public:
   void AddVariable(const Variable &var);
   std::optional<Variable> GetVariable(const std::string &name) const;
+  std::vector<Variable> GetAllVariables() const;
   bool WriteVariable(const std::string &name,
                      const std::variant<int, float, bool> &val);
 

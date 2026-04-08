@@ -1,6 +1,10 @@
 #include "axMini/VariableEngine.hpp"
 #include "httplib.h"
 #include "nlohmann/json.hpp"
+#include <chrono>
+#include <stop_token>
+#include <thread>
+#include <vector>
 
 int main() {
   VariableEngine engine;
@@ -56,6 +60,19 @@ int main() {
     } catch (const nlohmann::json::parse_error &e) {
       res.set_content("{\"error\": \"invalid JSON\"}", "application/json");
       return;
+    }
+  });
+
+  std::jthread scan_thread([&engine](std::stop_token st) {
+    while (!st.stop_requested()) {
+      std::vector<Variable> vars = engine.GetAllVariables();
+
+      for (const auto &it : vars) {
+        std::visit(
+            [&it](auto val) { std::cout << it.name << " = " << val << "\n"; },
+            it.value);
+      }
+      std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
   });
 
