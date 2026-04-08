@@ -60,7 +60,6 @@ std::vector<Token> Lexer::Tokenize(const std::string &input) {
           token.push_back(Token(TokenType::kIdentifier, word));
         }
       }
-
       break;
     }
   }

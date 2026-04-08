@@ -37,5 +37,13 @@ add_executable(test_lexer
   tests/test_lexer.cpp
 )
 
-target_link_libraries(test_lexer PRIVATE axMini_options)
+target_link_libraries(
+  test_lexer
+  PRIVATE axMini_options
+)
+
+target_include_directories(
+  test_lexer
+  PRIVATE ${CMAKE_SOURCE_DIR}/tests
+)
 

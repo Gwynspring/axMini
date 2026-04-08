@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Variable.hpp"
+#include <mutex>
 #include <optional>
 #include <unordered_map>
 
@@ -12,5 +13,6 @@ public:
                      const std::variant<int, float, bool> &val);
 
 private:
+  mutable std::mutex mutex_;
   std::unordered_map<std::string, Variable> variable_;
 };
