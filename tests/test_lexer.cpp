@@ -1,7 +1,4 @@
 #include "axMini/Lexer.hpp"
-#include "axMini/Parser.hpp"
-#include "axMini/Token.hpp"
-#include "axMini/Types.hpp"
 #include <string>
 #include <vector>
 
@@ -12,6 +9,9 @@ TEST_CASE("test lexer") {
   std::string input_int = "VAR motor_speed : INT = 42;";
   std::string input_float = "VAR motor_speed : FLOAT = 42.42;";
   std::string input_bool = "VAR motor_speed : BOOL = true;";
+  std::string input_invalid = "VER motor_speed : BOOL = true;";
+  std::string input_multi = "VAR motor_speed : INT = 42;\n"
+                            "VAR valve_open : BOOL = false;";
 
   Lexer lex;
   std::vector<Token> t = lex.Tokenize(input_int);
@@ -43,4 +43,14 @@ TEST_CASE("test lexer") {
   CHECK(t.at(5).token_type == TokenType::kBoolValue);
   CHECK(t.at(5).value == "true");
   CHECK(t.back().token_type == TokenType::kEndOfStatement);
+
+  t = lex.Tokenize(input_invalid);
+  CHECK(t.at(0).token_type == TokenType::kIdentifier);
+  CHECK(t.at(0).value == "VER");
+
+  t = lex.Tokenize(input_multi);
+  CHECK(t.size() == 14);
+  CHECK(t.at(6).token_type == TokenType::kEndOfStatement);
+  CHECK(t.at(7).token_type == TokenType::kKeyWord);
+  CHECK(t.at(13).token_type == TokenType::kEndOfStatement);
 }
