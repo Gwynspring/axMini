@@ -7,13 +7,13 @@ axMini is a lightweight soft-PLC backend written in C++20. It features its own D
 The extensible architecture was prioritized, with the lexer, parser, and engine being distinctly separate from one another. The addition of a new DSL command is met with a modification of the lexer and parser alone, with no effect on the engine.
 
 ```mermaid
-graph TD;
-    DSL_Input[DSL Input]-->Lexer;
-    Lexer-->Parser;
-    Parser-->VariableEngine;
-    VariableEngine<-->REST_API[REST API];
-    Scan_Cycle[Scan Cycle]<-->VariableEngine;
-    REST_API<-->HTTP_Client[HTTP Client];
+graph TD
+    DSL_Input[DSL Input] --> Lexer
+    Lexer --> Parser
+    Parser --> VariableEngine
+    VariableEngine <--> REST_API[REST API]
+    Scan_Cycle[Scan Cycle] <--> VariableEngine
+    REST_API <--> HTTP_Client[HTTP Client]
 ```
 
 ## Core Components
@@ -96,4 +96,3 @@ curl http://localhost:8080/variables/input_test
 ## License
 
 MIT
-```

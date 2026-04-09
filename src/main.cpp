@@ -47,13 +47,13 @@ int main() {
 
       bool success = false;
 
-      if (val.IsNumber_integer()) {
+      if (val.is_number_integer()) {
         success = engine.WriteVariable(name, val.get<int>());
-      } else if (val.IsNumber_float()) {
+      } else if (val.is_number_float()) {
         success = engine.WriteVariable(name, val.get<float>());
       } else if (val.is_boolean()) {
         success = engine.WriteVariable(name, val.get<bool>());
-      } else if (!val.IsNumber_integer() && !val.IsNumber_float() &&
+      } else if (!val.is_number_integer() && !val.is_number_float() &&
                  !val.is_boolean()) {
         res.status = 400;
         res.set_content("{\"error\": \"unsupported value type\"}",
