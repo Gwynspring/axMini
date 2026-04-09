@@ -8,11 +8,13 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "../lib/doctest/doctest.h"
 
-TEST_CASE("test lexer and parser") {
-  std::string input = "VAR motor_speed : INT = 42;";
+TEST_CASE("test lexer") {
+  std::string input_int = "VAR motor_speed : INT = 42;";
+  std::string input_float = "VAR motor_speed : FLOAT = 42.42;";
+  std::string input_bool = "VAR motor_speed : BOOL = true;";
 
   Lexer lex;
-  std::vector<Token> t = lex.Tokenize(input);
+  std::vector<Token> t = lex.Tokenize(input_int);
 
   CHECK(t.at(0).token_type == TokenType::kKeyWord);
   CHECK(t.at(0).value == "VAR");
@@ -22,10 +24,23 @@ TEST_CASE("test lexer and parser") {
   CHECK(t.at(5).value == "42");
   CHECK(t.back().token_type == TokenType::kEndOfStatement);
 
-  Parser p;
+  t = lex.Tokenize(input_float);
 
-  std::vector<VarDeclaration> vd = p.Parse(t);
+  CHECK(t.at(0).token_type == TokenType::kKeyWord);
+  CHECK(t.at(0).value == "VAR");
+  CHECK(t.at(1).token_type == TokenType::kIdentifier);
+  CHECK(t.at(1).value == "motor_speed");
+  CHECK(t.at(5).token_type == TokenType::kFloatValue);
+  CHECK(t.at(5).value == "42.42");
+  CHECK(t.back().token_type == TokenType::kEndOfStatement);
 
-  CHECK(vd.at(0).name == "motor_speed");
-  CHECK(std::get<int>(vd.at(0).initial_value) == 42);
+  t = lex.Tokenize(input_bool);
+
+  CHECK(t.at(0).token_type == TokenType::kKeyWord);
+  CHECK(t.at(0).value == "VAR");
+  CHECK(t.at(1).token_type == TokenType::kIdentifier);
+  CHECK(t.at(1).value == "motor_speed");
+  CHECK(t.at(5).token_type == TokenType::kBoolValue);
+  CHECK(t.at(5).value == "true");
+  CHECK(t.back().token_type == TokenType::kEndOfStatement);
 }

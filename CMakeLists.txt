@@ -47,3 +47,19 @@ target_include_directories(
   PRIVATE ${CMAKE_SOURCE_DIR}/tests
 )
 
+add_executable(test_parser
+  src/Lexer.cpp
+  src/Parser.cpp
+  tests/test_parser.cpp
+)
+
+target_link_libraries(
+  test_parser
+  PRIVATE axMini_options
+)
+
+target_include_directories(
+  test_parser
+  PRIVATE ${CMAKE_SOURCE_DIR}/tests
+)
+
