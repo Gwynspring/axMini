@@ -20,6 +20,7 @@ add_executable(axMini
   src/VariableEngine.cpp
   src/Lexer.cpp
   src/Parser.cpp
+  src/Motor.cpp
 )
 
 target_include_directories(

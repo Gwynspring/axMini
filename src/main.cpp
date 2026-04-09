@@ -1,3 +1,4 @@
+#include "axMini/Motor.hpp"
 #include "axMini/VariableEngine.hpp"
 #include "httplib.h"
 #include "nlohmann/json.hpp"
@@ -9,6 +10,7 @@
 
 int main() {
   VariableEngine engine;
+  Motor motor_1(engine, "motor_1");
   httplib::Server svr;
 
   Variable input(VariableType::kInput, "input_test", 42);
