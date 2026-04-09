@@ -65,3 +65,35 @@ target_include_directories(
   PRIVATE ${CMAKE_SOURCE_DIR}/tests
 )
 
+add_executable(test_motor
+  src/VariableEngine.cpp
+  src/Motor.cpp
+  tests/test_motor.cpp
+)
+
+target_link_libraries(
+  test_motor
+  PRIVATE axMini_options
+)
+
+target_include_directories(
+  test_motor
+  PRIVATE ${CMAKE_SOURCE_DIR}/tests
+)
+
+add_executable(test_valve
+  src/VariableEngine.cpp
+  src/Valve.cpp
+  tests/test_valve.cpp
+)
+
+target_link_libraries(
+  test_valve
+  PRIVATE axMini_options
+)
+
+target_include_directories(
+  test_valve
+  PRIVATE ${CMAKE_SOURCE_DIR}/tests
+)
+
