@@ -21,6 +21,7 @@ add_executable(axMini
   src/Lexer.cpp
   src/Parser.cpp
   src/Motor.cpp
+  src/Valve.cpp
 )
 
 target_include_directories(
