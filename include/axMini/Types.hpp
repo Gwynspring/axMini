@@ -5,6 +5,7 @@
 
 enum class TokenType {
   kKeyWord,
+  kObjectKeyWord,
   kIdentifier,
   kType,
   kColon,
@@ -12,7 +13,7 @@ enum class TokenType {
   kEndOfStatement,
   kIntValue,
   kFloatValue,
-  kBoolValue
+  kBoolValue,
 };
 
 enum class VariableType {
@@ -20,6 +21,8 @@ enum class VariableType {
   kOutput,
   kIntern,
 };
+
+enum class ObjectType { kMotor, kValve };
 
 enum class DataType { kInt, kFloat, kBool };
 
@@ -30,6 +33,15 @@ inline std::optional<DataType> DataTypeFromString(const std::string &s) {
     return DataType::kFloat;
   } else if (s == "BOOL") {
     return DataType::kBool;
+  }
+  return std::nullopt;
+}
+
+inline std::optional<ObjectType> ObjectTypeFromString(const std::string &s) {
+  if (s == "MOTOR") {
+    return ObjectType::kMotor;
+  } else if (s == "VALVE") {
+    return ObjectType::kValve;
   }
   return std::nullopt;
 }

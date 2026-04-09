@@ -1,6 +1,7 @@
 #include "axMini/Parser.hpp"
 #include "axMini/ASTNode.hpp"
 #include "axMini/Types.hpp"
+#include <vector>
 
 std::vector<VarDeclaration> Parser::Parse(const std::vector<Token> &token) {
   std::vector<VarDeclaration> vd;
@@ -39,6 +40,31 @@ std::vector<VarDeclaration> Parser::Parse(const std::vector<Token> &token) {
     i += 6;
   }
   return vd;
+}
+
+std::vector<ObjectDeclaration>
+Parser::ParseObjectDeclarations(const std::vector<Token> &token) {
+  std::vector<ObjectDeclaration> od;
+
+  for (size_t i = 0; i < token.size(); i++) {
+    if (token.at(i).token_type != TokenType::kObjectKeyWord)
+      continue;
+    if (i + 2 >= token.size())
+      continue;
+    if (token.at(i + 1).token_type != TokenType::kIdentifier)
+      continue;
+    if (token.at(i + 2).token_type != TokenType::kEndOfStatement)
+      continue;
+
+    auto obj_type = ObjectTypeFromString(token.at(i).value);
+    if (!obj_type.has_value())
+      continue;
+
+    od.push_back(ObjectDeclaration(token.at(i + 1).value, obj_type.value()));
+
+    i += 2;
+  }
+  return od;
 }
 
 std::optional<std::variant<int, float, bool>>

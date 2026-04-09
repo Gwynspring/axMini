@@ -43,6 +43,8 @@ std::vector<Token> Lexer::Tokenize(const std::string &input) {
 
       if (word == "VAR") {
         token.push_back(Token(TokenType::kKeyWord, "VAR"));
+      } else if (word == "MOTOR" || word == "VALVE") {
+        token.push_back(Token(TokenType::kObjectKeyWord, word));
       } else if (word == "INT") {
         token.push_back(Token(TokenType::kType, "INT"));
       } else if (word == "FLOAT") {

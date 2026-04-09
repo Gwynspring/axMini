@@ -9,6 +9,8 @@
 class Parser {
 public:
   std::vector<VarDeclaration> Parse(const std::vector<Token> &token);
+  std::vector<ObjectDeclaration>
+  ParseObjectDeclarations(const std::vector<Token> &token);
 
 private:
   static std::optional<std::variant<int, float, bool>>
