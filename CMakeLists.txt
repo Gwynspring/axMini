@@ -20,6 +20,7 @@ add_executable(axMini
   src/VariableEngine.cpp
   src/Lexer.cpp
   src/Parser.cpp
+  src/AutomationFactory.cpp
   src/Motor.cpp
   src/Valve.cpp
 )

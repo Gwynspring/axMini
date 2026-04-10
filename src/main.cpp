@@ -1,19 +1,26 @@
-#include "axMini/Motor.hpp"
-#include "axMini/Valve.hpp"
+#include "axMini/AutomationFactory.hpp"
+#include "axMini/Lexer.hpp"
+#include "axMini/Parser.hpp"
 #include "axMini/VariableEngine.hpp"
 #include "httplib.h"
 #include "nlohmann/json.hpp"
 #include <chrono>
-#include <iostream>
 #include <stop_token>
 #include <thread>
-#include <vector>
 
 int main() {
+  std::string dsl = "MOTOR motor_1;\n"
+                    "VALVE valve_1;\n";
+
   VariableEngine engine;
-  Motor motor_1(engine, "motor_1");
-  Valve valve_1(engine, "valve_1");
+  Lexer lex;
+  Parser parser;
+  AutomationFactory factory;
   httplib::Server svr;
+
+  auto tokens = lex.Tokenize(dsl);
+  auto declarations = parser.ParseObjectDeclarations(tokens);
+  auto objects = factory.Create(declarations, engine);
 
   Variable input(VariableType::kInput, "input_test", 42);
   Variable output(VariableType::kOutput, "output_test", true);
@@ -57,8 +64,7 @@ int main() {
         success = engine.WriteVariable(name, val.get<float>());
       } else if (val.is_boolean()) {
         success = engine.WriteVariable(name, val.get<bool>());
-      } else if (!val.is_number_integer() && !val.is_number_float() &&
-                 !val.is_boolean()) {
+      } else {
         res.status = 400;
         res.set_content("{\"error\": \"unsupported value type\"}",
                         "application/json");
@@ -73,14 +79,11 @@ int main() {
     }
   });
 
-  std::jthread scan_thread([&engine](std::stop_token st) {
+  std::jthread scan_thread([&objects](std::stop_token st) {
     while (!st.stop_requested()) {
-      std::vector<Variable> vars = engine.GetAllVariables();
 
-      for (const auto &it : vars) {
-        std::visit(
-            [&it](auto val) { std::cout << it.name << " = " << val << "\n"; },
-            it.value);
+      for (const auto &obj : objects) {
+        obj->Update();
       }
       std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
