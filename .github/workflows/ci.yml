@@ -1,0 +1,32 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install Dependencies
+        run: sudo apt-get install -y cmake g++
+
+      - name: Build
+        run: |
+          cmake -B build
+          cmake --build build
+
+      - name: Test Lexer
+        run: ./build/test_lexer
+            
+      - name: Test Parser
+        run: ./build/test_parser
+
+      - name: Test Motor
+        run: ./build/test_motor
+
+      - name: Test Valve
+        run: ./build/test_valve
