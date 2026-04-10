@@ -1,3 +1,4 @@
+#include "axMini/Logger.hpp"
 #include "axMini/Valve.hpp"
 #include <string>
 
@@ -5,6 +6,7 @@
 #include "../lib/doctest/doctest.h"
 
 TEST_CASE("test valve") {
+  Logger::Init();
   VariableEngine engine;
   Valve valve_1(engine, "valve_1");
 

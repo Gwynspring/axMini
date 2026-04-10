@@ -63,6 +63,7 @@ vcpkg_installed/
 
 # debug information files
 *.dwo
+*.log
 
 # test output & cache
 Testing/
@@ -71,3 +72,4 @@ Testing/
 
 # message template
 .gitmessage
+

@@ -1,3 +1,4 @@
+#include "axMini/Logger.hpp"
 #include "axMini/Motor.hpp"
 #include <string>
 
@@ -5,6 +6,7 @@
 #include "../lib/doctest/doctest.h"
 
 TEST_CASE("test motor") {
+  Logger::Init();
   VariableEngine engine;
   Motor motor_1(engine, "motor_1");
 

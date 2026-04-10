@@ -1,5 +1,6 @@
 #include "axMini/AutomationFactory.hpp"
 #include "axMini/Lexer.hpp"
+#include "axMini/Logger.hpp"
 #include "axMini/Parser.hpp"
 #include "axMini/VariableEngine.hpp"
 #include "httplib.h"
@@ -9,6 +10,9 @@
 #include <thread>
 
 int main() {
+
+  Logger::Init();
+
   std::string dsl = "MOTOR motor_1;\n"
                     "VALVE valve_1;\n";
 

@@ -14,8 +14,11 @@ target_compile_options(axMini_options INTERFACE -Wall -Wextra -Wpedantic)
 target_include_directories(axMini_options INTERFACE
     ${CMAKE_SOURCE_DIR}/include
 )
+add_subdirectory(lib/spdlog)
+
 
 add_executable(axMini
+  src/Logger.cpp
   src/main.cpp
   src/VariableEngine.cpp
   src/Lexer.cpp
@@ -32,7 +35,8 @@ target_include_directories(
     ${CMAKE_SOURCE_DIR}/lib/nlohmann-json/single_include
 )
 
-target_link_libraries(axMini PRIVATE axMini_options)
+
+target_link_libraries(axMini PRIVATE axMini_options spdlog::spdlog)
 
 add_executable(test_lexer
   src/Lexer.cpp
@@ -67,6 +71,7 @@ target_include_directories(
 )
 
 add_executable(test_motor
+  src/Logger.cpp
   src/VariableEngine.cpp
   src/Motor.cpp
   tests/test_motor.cpp
@@ -75,6 +80,7 @@ add_executable(test_motor
 target_link_libraries(
   test_motor
   PRIVATE axMini_options
+  spdlog::spdlog
 )
 
 target_include_directories(
@@ -83,6 +89,7 @@ target_include_directories(
 )
 
 add_executable(test_valve
+  src/Logger.cpp
   src/VariableEngine.cpp
   src/Valve.cpp
   tests/test_valve.cpp
@@ -91,6 +98,7 @@ add_executable(test_valve
 target_link_libraries(
   test_valve
   PRIVATE axMini_options
+  spdlog::spdlog
 )
 
 target_include_directories(
