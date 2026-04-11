@@ -45,12 +45,8 @@ std::vector<Token> Lexer::Tokenize(const std::string &input) {
         token.push_back(Token(TokenType::kKeyWord, "VAR"));
       } else if (word == "MOTOR" || word == "VALVE") {
         token.push_back(Token(TokenType::kObjectKeyWord, word));
-      } else if (word == "INT") {
-        token.push_back(Token(TokenType::kType, "INT"));
-      } else if (word == "FLOAT") {
-        token.push_back(Token(TokenType::kType, "FLOAT"));
-      } else if (word == "BOOL") {
-        token.push_back(Token(TokenType::kType, "BOOL"));
+      } else if (word == "INT" || word == "FLOAT" || word == "BOOL") {
+        token.push_back(Token(TokenType::kType, word));
       } else {
         if (word == "true" || word == "false") {
           token.push_back(Token(TokenType::kBoolValue, word));

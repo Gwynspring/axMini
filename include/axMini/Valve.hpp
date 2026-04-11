@@ -8,7 +8,7 @@ public:
   Valve(VariableEngine &var_engine, std::string name);
   void Open();
   void Close();
-  bool IsOpen();
+  bool IsOpen() const;
   void Update() override;
 
 private:

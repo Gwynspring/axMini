@@ -1,7 +1,6 @@
 #include "axMini/Parser.hpp"
 #include "axMini/ASTNode.hpp"
 #include "axMini/Types.hpp"
-#include <vector>
 
 std::vector<VarDeclaration> Parser::Parse(const std::vector<Token> &token) {
   std::vector<VarDeclaration> vd;

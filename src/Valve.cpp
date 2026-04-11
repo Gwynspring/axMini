@@ -9,7 +9,7 @@ Valve::Valve(VariableEngine &engine, std::string name)
 
 void Valve::Open() { var_engine_.WriteVariable(name_ + ".is_open", true); }
 void Valve::Close() { var_engine_.WriteVariable(name_ + ".is_open", false); }
-bool Valve::IsOpen() {
+bool Valve::IsOpen() const {
   auto var = var_engine_.GetVariable(name_ + ".is_open");
 
   if (!var.has_value()) {
