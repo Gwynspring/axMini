@@ -17,8 +17,11 @@ TEST_CASE("test valve") {
 
   var = engine.GetVariable("valve_1.is_open");
   CHECK(std::get<bool>(var->value) == true);
+  CHECK(valve_1.IsOpen() == true);
 
   valve_1.Close();
   var = engine.GetVariable("valve_1.is_open");
   CHECK_FALSE(std::get<bool>(var->value));
+
+  CHECK_FALSE(valve_1.IsOpen());
 }

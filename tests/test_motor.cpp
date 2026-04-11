@@ -9,6 +9,7 @@ TEST_CASE("test motor") {
   Logger::Init();
   VariableEngine engine;
   Motor motor_1(engine, "motor_1");
+  Motor motor_2(engine, "motor_2");
 
   auto var = engine.GetVariable("motor_1.speed");
   CHECK(std::get<int>(var->value) == 0);
@@ -17,8 +18,15 @@ TEST_CASE("test motor") {
   CHECK_FALSE(std::get<bool>(var->value));
 
   motor_1.SetSpeed(150);
+  motor_2.SetSpeed(200);
   var = engine.GetVariable("motor_1.speed");
   CHECK(std::get<int>(var->value) == 150);
+  var = engine.GetVariable("motor_2.speed");
+  CHECK(std::get<int>(var->value) == 200);
+
+  motor_1.SetSpeed(-150);
+  var = engine.GetVariable("motor_1.speed");
+  CHECK(std::get<int>(var->value) == -150);
 
   motor_1.Start();
   var = engine.GetVariable("motor_1.running");
