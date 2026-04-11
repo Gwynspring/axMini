@@ -13,6 +13,8 @@ TEST_CASE("test parser") {
   std::string input_invalid = "VER motor_speed : BOOL = true;";
   std::string input_multi = "VAR motor_speed : INT = 42;\n"
                             "VAR valve_open : BOOL = false;";
+  std::string input_incoplete = "VAR motor_speed : INT;";
+  std::string input_no_semicolon = "VAR motor_speed : INT = 42";
 
   std::vector<Token> t = Lexer::Tokenize(input_int);
 
@@ -31,6 +33,14 @@ TEST_CASE("test parser") {
   CHECK(std::get<bool>(vd.at(0).initial_value) == true);
 
   t = Lexer::Tokenize(input_invalid);
+  vd = Parser::Parse(t);
+  CHECK(vd.empty() == true);
+
+  t = Lexer::Tokenize(input_incoplete);
+  vd = Parser::Parse(t);
+  CHECK(vd.empty() == true);
+
+  t = Lexer::Tokenize(input_no_semicolon);
   vd = Parser::Parse(t);
   CHECK(vd.empty() == true);
 
