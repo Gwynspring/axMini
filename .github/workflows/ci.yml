@@ -25,13 +25,13 @@ jobs:
           cmake --build build
 
       - name: Test Lexer
-        run: ./build/test_lexer
+        run: ./build/test/test_lexer
             
       - name: Test Parser
-        run: ./build/test_parser
+        run: ./build/test/test_parser
 
       - name: Test Motor
-        run: ./build/test_motor
+        run: ./build/test/test_motor
 
       - name: Test Valve
-        run: ./build/test_valve
+        run: ./build/test/test_valve
