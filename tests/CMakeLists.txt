@@ -21,3 +21,9 @@ target_link_libraries(test_valve PRIVATE axMini_core)
 target_include_directories(test_valve PRIVATE
     ${CMAKE_SOURCE_DIR}/lib/doctest
 )
+
+add_executable(test_engine test_engine.cpp)
+target_link_libraries(test_engine PRIVATE axMini_core)
+target_include_directories(test_engine PRIVATE
+    ${CMAKE_SOURCE_DIR}/lib/doctest
+)
