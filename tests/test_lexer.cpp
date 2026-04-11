@@ -14,7 +14,7 @@ TEST_CASE("test lexer") {
                             "VAR valve_open : BOOL = false;";
 
   Lexer lex;
-  std::vector<Token> t = lex.Tokenize(input_int);
+  std::vector<Token> t = Lexer::Tokenize(input_int);
 
   CHECK(t.at(0).token_type == TokenType::kKeyWord);
   CHECK(t.at(0).value == "VAR");
@@ -24,7 +24,7 @@ TEST_CASE("test lexer") {
   CHECK(t.at(5).value == "42");
   CHECK(t.back().token_type == TokenType::kEndOfStatement);
 
-  t = lex.Tokenize(input_float);
+  t = Lexer::Tokenize(input_float);
 
   CHECK(t.at(0).token_type == TokenType::kKeyWord);
   CHECK(t.at(0).value == "VAR");
@@ -34,7 +34,7 @@ TEST_CASE("test lexer") {
   CHECK(t.at(5).value == "42.42");
   CHECK(t.back().token_type == TokenType::kEndOfStatement);
 
-  t = lex.Tokenize(input_bool);
+  t = Lexer::Tokenize(input_bool);
 
   CHECK(t.at(0).token_type == TokenType::kKeyWord);
   CHECK(t.at(0).value == "VAR");
@@ -44,11 +44,11 @@ TEST_CASE("test lexer") {
   CHECK(t.at(5).value == "true");
   CHECK(t.back().token_type == TokenType::kEndOfStatement);
 
-  t = lex.Tokenize(input_invalid);
+  t = Lexer::Tokenize(input_invalid);
   CHECK(t.at(0).token_type == TokenType::kIdentifier);
   CHECK(t.at(0).value == "VER");
 
-  t = lex.Tokenize(input_multi);
+  t = Lexer::Tokenize(input_multi);
   CHECK(t.size() == 14);
   CHECK(t.at(6).token_type == TokenType::kEndOfStatement);
   CHECK(t.at(7).token_type == TokenType::kKeyWord);

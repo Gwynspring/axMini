@@ -6,8 +6,8 @@
 
 class Lexer {
 public:
-  std::vector<Token> Tokenize(const std::string &input);
+  static std::vector<Token> Tokenize(const std::string &input);
 
 private:
-  bool IsNumber(const std::string &s);
+  static bool IsNumber(const std::string &s);
 };

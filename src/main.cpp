@@ -17,13 +17,11 @@ int main() {
                     "VALVE valve_1;\n";
 
   VariableEngine engine;
-  Lexer lex;
-  Parser parser;
   AutomationFactory factory;
   httplib::Server svr;
 
-  auto tokens = lex.Tokenize(dsl);
-  auto declarations = parser.ParseObjectDeclarations(tokens);
+  auto tokens = Lexer::Tokenize(dsl);
+  auto declarations = Parser::ParseObjectDeclarations(tokens);
   auto objects = factory.Create(declarations, engine);
 
   Variable input(VariableType::kInput, "input_test", 42);
