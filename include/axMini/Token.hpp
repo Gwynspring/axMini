@@ -1,6 +1,6 @@
 #pragma once
 
-#include "axMini/Types.hpp"
+#include "Types.hpp"
 #include <string>
 
 struct Token {

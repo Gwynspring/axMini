@@ -14,6 +14,24 @@ enum class TokenType {
   kIntValue,
   kFloatValue,
   kBoolValue,
+  kGreaterThan,
+  kLessThan,
+  kAnd,
+  kOr,
+  kEqualEqual,
+  kNotEqual,
+  kIfKeyword,
+  kThenKeyword,
+  kEndIfKeyword,
+};
+
+enum class ComparisonOp {
+  kGreaterThan,
+  kLessThan,
+  kAnd,
+  kOr,
+  kEqualEqual,
+  kNotEqual,
 };
 
 enum class VariableType {

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "axMini/Types.hpp"
+#include "Types.hpp"
 #include <string>
 #include <variant>
 
@@ -17,4 +17,20 @@ struct ObjectDeclaration {
   ObjectType obj_type;
   ObjectDeclaration(std::string n, ObjectType t)
       : name(std::move(n)), obj_type(t) {};
+};
+
+struct Condition {
+  std::string left;
+  ComparisonOp comparison;
+  std::variant<int, float, bool> value;
+};
+
+struct Assignment {
+  std::string variable;
+  std::variant<int, float, bool> value;
+};
+
+struct IfStatement {
+  Condition condition;
+  Assignment assignment;
 };

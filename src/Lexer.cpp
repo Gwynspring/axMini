@@ -22,7 +22,43 @@ std::vector<Token> Lexer::Tokenize(const std::string &input) {
       token.push_back(Token(TokenType::kColon, ":"));
       break;
 
+    case '!':
+      if (i + 1 < input.length() && input[i + 1] == '=') {
+        token.push_back(Token(TokenType::kNotEqual, "!="));
+        i++;
+        break;
+      } else
+        break;
+
+    case '>':
+      token.push_back(Token(TokenType::kGreaterThan, ">"));
+      break;
+    case '<':
+      token.push_back(Token(TokenType::kLessThan, "<"));
+      break;
+
+    case '&':
+      if (i + 1 <= input.length() && input[i + 1] == '&') {
+        token.push_back(Token(TokenType::kAnd, "&&"));
+        i++;
+        break;
+      } else
+        break;
+
+    case '|':
+      if (i + 1 <= input.length() && input[i + 1] == '|') {
+        token.push_back(Token(TokenType::kOr, "||"));
+        i++;
+        break;
+      } else
+        break;
+
     case '=':
+      if (i + 1 < input.length() && input[i + 1] == '=') {
+        token.push_back(Token(TokenType::kEqualEqual, "=="));
+        i++;
+        break;
+      }
       token.push_back(Token(TokenType::kEquals, "="));
       break;
 
@@ -35,7 +71,8 @@ std::vector<Token> Lexer::Tokenize(const std::string &input) {
       std::string word;
       while ((i + counter < input.length()) && input[i + counter] != ' ' &&
              input[i + counter] != ';' && input[i + counter] != ':' &&
-             input[i + counter] != '=') {
+             input[i + counter] != '=' && input[i + counter] != '<' &&
+             input[i + counter] != '>' && input[i + counter] != '!') {
         word += input[i + counter];
         counter++;
       }
@@ -47,6 +84,12 @@ std::vector<Token> Lexer::Tokenize(const std::string &input) {
         token.push_back(Token(TokenType::kObjectKeyWord, word));
       } else if (word == "INT" || word == "FLOAT" || word == "BOOL") {
         token.push_back(Token(TokenType::kType, word));
+      } else if (word == "IF") {
+        token.push_back(Token(TokenType::kIfKeyword, "IF"));
+      } else if (word == "THEN") {
+        token.push_back(Token(TokenType::kThenKeyword, "THEN"));
+      } else if (word == "END_IF") {
+        token.push_back(Token(TokenType::kEndIfKeyword, "END_IF"));
       } else {
         if (word == "true" || word == "false") {
           token.push_back(Token(TokenType::kBoolValue, word));

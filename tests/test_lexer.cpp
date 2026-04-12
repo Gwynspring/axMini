@@ -14,6 +14,8 @@ TEST_CASE("test lexer") {
                             "VAR valve_open : BOOL = false;";
   std::string input_empty = "";
   std::string input_whitespace = "   \t\n  ";
+  std::string input_if =
+      "IF motor_1.speed > 100 THEN valve_1.is_open = true; END_IF;";
 
   std::vector<Token> t = Lexer::Tokenize(input_int);
 
@@ -62,4 +64,17 @@ TEST_CASE("test lexer") {
 
   t = Lexer::Tokenize(input_whitespace);
   CHECK(t.size() == 0);
+
+  t = Lexer::Tokenize(input_if);
+  CHECK(t.at(0).token_type == TokenType::kIfKeyword);
+  CHECK(t.at(1).value == "motor_1.speed");
+  CHECK(t.at(2).token_type == TokenType::kGreaterThan);
+  CHECK(t.at(3).value == "100");
+  CHECK(t.at(4).token_type == TokenType::kThenKeyword);
+  CHECK(t.at(5).value == "valve_1.is_open");
+  CHECK(t.at(6).token_type == TokenType::kEquals);
+  CHECK(t.at(7).value == "true");
+  CHECK(t.at(8).token_type == TokenType::kEndOfStatement);
+  CHECK(t.at(9).token_type == TokenType::kEndIfKeyword);
+  CHECK(t.back().token_type == TokenType::kEndOfStatement);
 }

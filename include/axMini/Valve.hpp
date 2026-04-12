@@ -1,7 +1,7 @@
 #pragma once
 
-#include "axMini/AutomationObject.hpp"
-#include "axMini/VariableEngine.hpp"
+#include "AutomationObject.hpp"
+#include "VariableEngine.hpp"
 #include <string>
 class Valve : public AutomationObject {
 public:

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "axMini/ASTNode.hpp"
-#include "axMini/AutomationObject.hpp"
-#include "axMini/VariableEngine.hpp"
+#include "ASTNode.hpp"
+#include "AutomationObject.hpp"
+#include "VariableEngine.hpp"
 #include <memory>
 #include <vector>
 

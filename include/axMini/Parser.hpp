@@ -1,7 +1,7 @@
 #pragma once
 
-#include "axMini/ASTNode.hpp"
-#include "axMini/Token.hpp"
+#include "ASTNode.hpp"
+#include "Token.hpp"
 #include <optional>
 #include <variant>
 #include <vector>
