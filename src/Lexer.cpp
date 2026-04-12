@@ -1,5 +1,6 @@
 #include "axMini/Lexer.hpp"
 #include "axMini/Token.hpp"
+#include <sstream>
 #include <string>
 
 bool Lexer::IsNumber(const std::string &s) {
@@ -7,6 +8,13 @@ bool Lexer::IsNumber(const std::string &s) {
   while (it != s.end() && std::isdigit(*it))
     ++it;
   return !s.empty() && it == s.end();
+}
+
+bool Lexer::IsFloat(const std::string &s) {
+  std::istringstream iss(s);
+  float f;
+  iss >> std::noskipws >> f;
+  return iss.eof() && !iss.fail();
 }
 
 std::vector<Token> Lexer::Tokenize(const std::string &input) {
@@ -38,7 +46,7 @@ std::vector<Token> Lexer::Tokenize(const std::string &input) {
       break;
 
     case '&':
-      if (i + 1 <= input.length() && input[i + 1] == '&') {
+      if (i + 1 < input.length() && input[i + 1] == '&') {
         token.push_back(Token(TokenType::kAnd, "&&"));
         i++;
         break;
@@ -46,7 +54,7 @@ std::vector<Token> Lexer::Tokenize(const std::string &input) {
         break;
 
     case '|':
-      if (i + 1 <= input.length() && input[i + 1] == '|') {
+      if (i + 1 < input.length() && input[i + 1] == '|') {
         token.push_back(Token(TokenType::kOr, "||"));
         i++;
         break;
@@ -93,10 +101,10 @@ std::vector<Token> Lexer::Tokenize(const std::string &input) {
       } else {
         if (word == "true" || word == "false") {
           token.push_back(Token(TokenType::kBoolValue, word));
-        } else if (word.find('.') != std::string::npos) {
-          token.push_back(Token(TokenType::kFloatValue, word));
         } else if (IsNumber(word)) {
           token.push_back(Token(TokenType::kIntValue, word));
+        } else if (IsFloat(word)) {
+          token.push_back(Token(TokenType::kFloatValue, word));
         } else {
           token.push_back(Token(TokenType::kIdentifier, word));
         }

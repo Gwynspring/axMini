@@ -1,5 +1,7 @@
+#include "axMini/ASTNode.hpp"
 #include "axMini/Lexer.hpp"
 #include "axMini/Parser.hpp"
+#include "axMini/Types.hpp"
 #include <string>
 #include <vector>
 
@@ -15,7 +17,6 @@ TEST_CASE("test parser") {
                             "VAR valve_open : BOOL = false;";
   std::string input_incoplete = "VAR motor_speed : INT;";
   std::string input_no_semicolon = "VAR motor_speed : INT = 42";
-
   std::vector<Token> t = Lexer::Tokenize(input_int);
 
   std::vector<VarDeclaration> vd = Parser::Parse(t);
@@ -62,4 +63,17 @@ TEST_CASE("test parser") {
   CHECK(od.at(0).obj_type == ObjectType::kMotor);
   CHECK(od.at(1).name == "valve_1");
   CHECK(od.at(1).obj_type == ObjectType::kValve);
+
+  std::string input_if =
+      "IF motor_1.speed > 100 THEN valve_1.is_open = true; END_IF;";
+  t = Lexer::Tokenize(input_if);
+
+  auto ifs = Parser::ParseIfStatement(t);
+
+  CHECK(ifs.size() == 1);
+  CHECK(ifs.at(0).condition.left == "motor_1.speed");
+  CHECK(ifs.at(0).condition.comparison == ComparisonOp::kGreaterThan);
+  CHECK(std::get<int>(ifs.at(0).condition.value) == 100);
+  CHECK(ifs.at(0).assignment.variable == "valve_1.is_open");
+  CHECK(std::get<bool>(ifs.at(0).assignment.value) == true);
 }

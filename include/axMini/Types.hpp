@@ -63,3 +63,22 @@ inline std::optional<ObjectType> ObjectTypeFromString(const std::string &s) {
   }
   return std::nullopt;
 }
+
+inline std::optional<ComparisonOp> ComparisonOpFromTokenType(TokenType t) {
+  switch (t) {
+  case TokenType::kGreaterThan:
+    return ComparisonOp::kGreaterThan;
+  case TokenType::kLessThan:
+    return ComparisonOp::kLessThan;
+  case TokenType::kAnd:
+    return ComparisonOp::kAnd;
+  case TokenType::kOr:
+    return ComparisonOp::kOr;
+  case TokenType::kEqualEqual:
+    return ComparisonOp::kEqualEqual;
+  case TokenType::kNotEqual:
+    return ComparisonOp::kNotEqual;
+  default:
+    return std::nullopt;
+  }
+}

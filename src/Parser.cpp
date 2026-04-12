@@ -1,6 +1,7 @@
 #include "axMini/Parser.hpp"
 #include "axMini/ASTNode.hpp"
 #include "axMini/Types.hpp"
+#include <vector>
 
 std::vector<VarDeclaration> Parser::Parse(const std::vector<Token> &token) {
   std::vector<VarDeclaration> vd;
@@ -64,6 +65,92 @@ Parser::ParseObjectDeclarations(const std::vector<Token> &token) {
     i += 2;
   }
   return od;
+}
+
+/*
+0. kIfKeyword
+1. kIdentifier       ← condition.left
+2. kGreaterThan      ← ComparisonOp
+3. kIntValue         ← condition.value
+4. kThenKeyword
+5. kIdentifier       ← assignment.variable
+6. kEquals
+7. kBoolValue        ← assignment.value
+8. kEndOfStatement
+9. kEndIfKeyword
+10. kEndOfStatement
+*/
+
+std::vector<IfStatement>
+Parser::ParseIfStatement(const std::vector<Token> &token) {
+
+  std::vector<IfStatement> if_statements;
+  for (size_t i = 0; i < token.size(); i++) {
+    if (token.at(i).token_type != TokenType::kIfKeyword) {
+      continue;
+    }
+    if (i + 10 >= token.size()) {
+      continue;
+    }
+    if (token.at(i + 1).token_type != TokenType::kIdentifier) {
+      continue;
+    }
+    if (token.at(i + 2).token_type != TokenType::kGreaterThan &&
+        token.at(i + 2).token_type != TokenType::kLessThan &&
+        token.at(i + 2).token_type != TokenType::kEqualEqual &&
+        token.at(i + 2).token_type != TokenType::kNotEqual &&
+        token.at(i + 2).token_type != TokenType::kAnd &&
+        token.at(i + 2).token_type != TokenType::kOr) {
+      continue;
+    }
+    if (token.at(i + 3).token_type != TokenType::kIntValue &&
+        token.at(i + 3).token_type != TokenType::kFloatValue &&
+        token.at(i + 3).token_type != TokenType::kBoolValue) {
+      continue;
+    }
+    if (token.at(i + 4).token_type != TokenType::kThenKeyword) {
+      continue;
+    }
+    if (token.at(i + 5).token_type != TokenType::kIdentifier) {
+      continue;
+    }
+    if (token.at(i + 6).token_type != TokenType::kEquals) {
+      continue;
+    }
+    if (token.at(i + 7).token_type != TokenType::kIntValue &&
+        token.at(i + 7).token_type != TokenType::kFloatValue &&
+        token.at(i + 7).token_type != TokenType::kBoolValue) {
+      continue;
+    }
+    if (token.at(i + 8).token_type != TokenType::kEndOfStatement) {
+      continue;
+    }
+    if (token.at(i + 9).token_type != TokenType::kEndIfKeyword) {
+      continue;
+    }
+    if (token.at(i + 10).token_type != TokenType::kEndOfStatement) {
+      continue;
+    }
+
+    auto comp_op = ComparisonOpFromTokenType(token.at(i + 2).token_type);
+    if (!comp_op.has_value())
+      continue;
+
+    auto value = ParseValue(token.at(i + 3));
+    if (!value.has_value())
+      continue;
+
+    Condition cond(token.at(i + 1).value, comp_op.value(), value.value());
+
+    value = ParseValue(token.at(i + 7));
+    if (!value.has_value())
+      continue;
+
+    Assignment assignment(token.at(i + 5).value, value.value());
+    if_statements.push_back(IfStatement(cond, assignment));
+    i += 10;
+  }
+  return if_statements;
 }
 
 std::optional<std::variant<int, float, bool>>

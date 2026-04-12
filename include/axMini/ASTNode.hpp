@@ -2,6 +2,7 @@
 
 #include "Types.hpp"
 #include <string>
+#include <utility>
 #include <variant>
 
 struct VarDeclaration {
@@ -23,14 +24,21 @@ struct Condition {
   std::string left;
   ComparisonOp comparison;
   std::variant<int, float, bool> value;
+  Condition(std::string l, ComparisonOp comp_op,
+            std::variant<int, float, bool> val)
+      : left(std::move(l)), comparison(comp_op), value(std::move(val)) {};
 };
 
 struct Assignment {
   std::string variable;
   std::variant<int, float, bool> value;
+  Assignment(std::string var, std::variant<int, float, bool> val)
+      : variable(std::move(var)), value(std::move(val)) {};
 };
 
 struct IfStatement {
   Condition condition;
   Assignment assignment;
+  IfStatement(Condition cond, Assignment ass)
+      : condition(std::move(cond)), assignment(std::move(ass)) {};
 };

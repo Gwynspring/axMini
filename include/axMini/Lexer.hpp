@@ -10,4 +10,5 @@ public:
 
 private:
   static bool IsNumber(const std::string &s);
+  static bool IsFloat(const std::string &s);
 };
