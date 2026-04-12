@@ -1,4 +1,5 @@
 #include "axMini/AutomationFactory.hpp"
+#include "axMini/ExecutionEngine.hpp"
 #include "axMini/Lexer.hpp"
 #include "axMini/Logger.hpp"
 #include "axMini/Parser.hpp"
@@ -13,8 +14,10 @@ int main() {
 
   Logger::Init();
 
-  std::string dsl = "MOTOR motor_1;\n"
-                    "VALVE valve_1;\n";
+  std::string dsl =
+      "MOTOR motor_1;\n"
+      "VALVE valve_1;\n"
+      "IF motor_1.speed > 100 THEN valve_1.is_open = true; END_IF;\n";
 
   VariableEngine engine;
   AutomationFactory factory;
@@ -23,6 +26,7 @@ int main() {
   auto tokens = Lexer::Tokenize(dsl);
   auto declarations = Parser::ParseObjectDeclarations(tokens);
   auto objects = factory.Create(declarations, engine);
+  auto if_statements = Parser::ParseIfStatement(tokens);
 
   Variable input(VariableType::kInput, "input_test", 42);
   Variable output(VariableType::kOutput, "output_test", true);
@@ -81,15 +85,17 @@ int main() {
     }
   });
 
-  std::jthread scan_thread([&objects](std::stop_token st) {
-    while (!st.stop_requested()) {
-
-      for (const auto &obj : objects) {
-        obj->Update();
-      }
-      std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    }
-  });
+  std::jthread scan_thread(
+      [&objects, &engine, &if_statements](std::stop_token st) {
+        ExecutionEngine exec(engine);
+        while (!st.stop_requested()) {
+          exec.Execute(if_statements);
+          for (const auto &obj : objects) {
+            obj->Update();
+          }
+          std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        }
+      });
 
   svr.listen("0.0.0.0", 8080);
   return 0;
