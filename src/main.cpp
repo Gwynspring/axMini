@@ -1,4 +1,5 @@
 #include "axMini/AutomationFactory.hpp"
+#include "axMini/DslRuntime.hpp"
 #include "axMini/ExecutionEngine.hpp"
 #include "axMini/Lexer.hpp"
 #include "axMini/Logger.hpp"
@@ -20,13 +21,14 @@ int main() {
       "IF motor_1.speed > 100 THEN valve_1.is_open = true; END_IF;\n";
 
   VariableEngine engine;
+  DslRuntime runtime;
   AutomationFactory factory;
   httplib::Server svr;
 
   auto tokens = Lexer::Tokenize(dsl);
   auto declarations = Parser::ParseObjectDeclarations(tokens);
   auto objects = factory.Create(declarations, engine);
-  auto if_statements = Parser::ParseIfStatement(tokens);
+  runtime.AddStatements(Parser::ParseIfStatement(tokens));
 
   Variable input(VariableType::kInput, "input_test", 42);
   Variable output(VariableType::kOutput, "output_test", true);
@@ -52,6 +54,21 @@ int main() {
       res.set_content("{\"error\": \"variable not found\"}",
                       "application/json");
     }
+  });
+
+  svr.Post("/dsl/if", [&runtime](const httplib::Request &req,
+                                 httplib::Response &res) {
+    if (req.body.empty()) {
+      res.status = 400;
+      res.set_content("{\"error\": \"empty input\"}", "application/json");
+      return;
+    }
+    auto tokens = Lexer::Tokenize(req.body);
+    runtime.AddStatements(Parser::ParseIfStatement(tokens));
+
+    res.status = 200;
+    res.set_content("{\"status\": \"ok\"}", "application/json");
+    return;
   });
 
   svr.Put("/variables/:name", [&engine](const httplib::Request &req,
@@ -85,17 +102,16 @@ int main() {
     }
   });
 
-  std::jthread scan_thread(
-      [&objects, &engine, &if_statements](std::stop_token st) {
-        ExecutionEngine exec(engine);
-        while (!st.stop_requested()) {
-          exec.Execute(if_statements);
-          for (const auto &obj : objects) {
-            obj->Update();
-          }
-          std::this_thread::sleep_for(std::chrono::milliseconds(100));
-        }
-      });
+  std::jthread scan_thread([&objects, &engine, &runtime](std::stop_token st) {
+    ExecutionEngine exec(engine);
+    while (!st.stop_requested()) {
+      exec.Execute(runtime.GetStatements());
+      for (const auto &obj : objects) {
+        obj->Update();
+      }
+      std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    }
+  });
 
   svr.listen("0.0.0.0", 8080);
   return 0;
