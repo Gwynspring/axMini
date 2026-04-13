@@ -45,4 +45,17 @@ TEST_CASE("test ExecutionEngine") {
 
   exec.Execute(statements);
   CHECK_FALSE(std::get<bool>(engine.GetVariable("valve_1.is_open")->value));
+
+  std::string input_multi =
+      "IF motor_1.speed > 100 THEN valve_1.is_open = true; END_IF;\n"
+      "IF motor_1.speed < 200 THEN motor_1.speed = 199; END_IF;";
+
+  tokens = Lexer::Tokenize(input_multi);
+  statements = Parser::ParseIfStatement(tokens);
+  exec.Execute(statements);
+
+  CHECK(std::get<int>(engine.GetVariable("motor_1.speed")->value) == 199);
+  CHECK(std::get<bool>(engine.GetVariable("valve_1.is_open")->value) == true);
+
+  CHECK(engine.GetVariable("no_var") == std::nullopt);
 }
