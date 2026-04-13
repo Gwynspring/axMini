@@ -8,20 +8,27 @@
 
 axMini is a lightweight soft-PLC backend written in C++20. It features its own DSL, a thread-safe variable engine, and a scan cycle. Together, these elements demonstrate the core architecture of an industrial automation system.
 
+HTTP_Client → REST_API → Lexer → Parser → DslRuntime
 ```mermaid
 graph TD
     DSL_Input[DSL Input] --> Lexer
     Lexer --> Parser
     Parser --> VariableEngine
+    Parser --> DslRuntime
+    DslRuntime --> ExecutionEngine
     Parser --> AutomationFactory
     AutomationFactory --> Motor
     AutomationFactory --> Valve
     Motor <--> VariableEngine
     Valve <--> VariableEngine
     VariableEngine <--> REST_API[REST API]
+    ExecutionEngine --> VariableEngine
     Scan_Cycle[Scan Cycle] --> Valve
     Scan_Cycle[Scan Cycle] --> Motor
+    Scan_Cycle[Scan Cycle] --> ExecutionEngine
     REST_API <--> HTTP_Client[HTTP Client]
+    REST_API --> POST_DSL[POST /dsl/if]
+    POST_DSL[POST /dsl/if] --> Lexer
 ```
 
 ## Build & Quickstart
