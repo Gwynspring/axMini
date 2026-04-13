@@ -7,6 +7,7 @@ add_library(axMini_core STATIC
     Motor.cpp
     Valve.cpp
     ExecutionEngine.cpp
+    DslRuntime.cpp
 )
 target_link_libraries(axMini_core PUBLIC axMini_options spdlog::spdlog)
 
