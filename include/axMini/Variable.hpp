@@ -8,8 +8,10 @@ struct Variable {
   VariableType variable_typ;
   std::string name;
   std::variant<int, float, bool> value;
-  Variable(VariableType typ, std::string n, std::variant<int, float, bool> val)
-      : variable_typ(typ), name(std::move(n)), value(std::move(val)) {}
+
+  Variable(VariableType type, std::string n, std::variant<int, float, bool> val)
+      : variable_typ(type), name(std::move(n)), value(std::move(val)) {}
+
   static std::string VariableTypeToString(VariableType type) {
     switch (type) {
     case VariableType::kInput:
@@ -20,5 +22,18 @@ struct Variable {
       return "Intern";
     }
     __builtin_unreachable();
+  }
+
+  static std::optional<VariableType>
+  VariableTypeFromString(const std::string &s) {
+    if (s == "Input") {
+      return VariableType::kInput;
+    } else if (s == "Output") {
+      return VariableType::kOutput;
+    } else if (s == "Intern") {
+      return VariableType::kIntern;
+    }
+
+    return std::nullopt;
   }
 };

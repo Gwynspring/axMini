@@ -4,6 +4,7 @@
 #include "axMini/Lexer.hpp"
 #include "axMini/Logger.hpp"
 #include "axMini/Parser.hpp"
+#include "axMini/PersistenceManager.hpp"
 #include "axMini/VariableEngine.hpp"
 #include "httplib.h"
 #include "nlohmann/json.hpp"
@@ -22,6 +23,9 @@ int main() {
 
   VariableEngine engine;
   DslRuntime runtime;
+  PersistenceManager pers_manager(engine, runtime,
+                                  std::string(AXMINI_DATA_DIR) + "/state.json");
+  pers_manager.Load();
   AutomationFactory factory;
   httplib::Server svr;
 
@@ -56,6 +60,12 @@ int main() {
     }
   });
 
+  svr.Post("/save", [&pers_manager](const httplib::Request &req,
+                                    httplib::Response &res) {
+    pers_manager.Save();
+    res.status = 200;
+    res.set_content("{\"status\": \"saved\"}", "application/json");
+  });
   svr.Post("/dsl/if", [&runtime](const httplib::Request &req,
                                  httplib::Response &res) {
     if (req.body.empty()) {
@@ -64,7 +74,7 @@ int main() {
       return;
     }
     auto tokens = Lexer::Tokenize(req.body);
-    runtime.AddStatements(Parser::ParseIfStatement(tokens));
+    runtime.AddStatements(Parser::ParseIfStatement(tokens), req.body);
 
     res.status = 200;
     res.set_content("{\"status\": \"ok\"}", "application/json");
@@ -114,5 +124,6 @@ int main() {
   });
 
   svr.listen("0.0.0.0", 8080);
+  pers_manager.Save();
   return 0;
 }

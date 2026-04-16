@@ -73,3 +73,6 @@ Testing/
 # message template
 .gitmessage
 
+#dsl states 
+data/
+
