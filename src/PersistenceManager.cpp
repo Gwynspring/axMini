@@ -104,5 +104,8 @@ bool PersistenceManager::Save() {
     Logger::Error("Could not open file for saving");
     return false;
   }
+  Logger::Info("Saving to: " + filepath_.string());
+  Logger::Info("Variables count: " +
+               std::to_string(engine_.GetAllVariables().size()));
   return true;
 }

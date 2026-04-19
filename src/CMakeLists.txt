@@ -20,6 +20,7 @@ target_link_libraries(axMini_core PUBLIC
   spdlog::spdlog
 )
 
+file(MAKE_DIRECTORY ${CMAKE_SOURCE_DIR}/data)
 target_compile_definitions(axMini_core PUBLIC
     AXMINI_DATA_DIR="${CMAKE_SOURCE_DIR}/data"
 )
