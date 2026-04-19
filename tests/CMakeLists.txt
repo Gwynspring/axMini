@@ -33,3 +33,9 @@ target_link_libraries(test_execution_engine PRIVATE axMini_core)
 target_include_directories(test_execution_engine PRIVATE
     ${CMAKE_SOURCE_DIR}/lib/doctest
 )
+
+add_executable(test_persistence_manager test_persistence.cpp)
+target_link_libraries(test_persistence_manager PRIVATE axMini_core)
+target_include_directories(test_persistence_manager PRIVATE
+    ${CMAKE_SOURCE_DIR}/lib/doctest
+)
