@@ -56,7 +56,7 @@ When no Json file for storing variables and statements is specified a file is cr
 
 ```bash
 ❯ ./src/axMini
-[2026-04-20 22:47:00.800] [axLogger] [info] ../data/state.json
+# [2026-04-20 22:47:00.800] [axLogger] [info] ../data/state.json
 ```
 
 ---
@@ -107,7 +107,7 @@ curl http://localhost:8080/variables/valve_1.is_open
 
 ---
 
-#### 5\. DSL zur Laufzeit hinzufügen
+#### 5\. Add DSL at runtime
 
 ```bash
 curl -X POST http://localhost:8080/dsl/if \
@@ -150,7 +150,7 @@ cat data/state.json
 # Ctrl+C
 
 # Start server again
-./build/axMini
+./build/src/axMini
 
 # Check state 
 curl http://localhost:8080/variables/motor_1.speed
