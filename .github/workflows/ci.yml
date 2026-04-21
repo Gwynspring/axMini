@@ -24,14 +24,5 @@ jobs:
           cmake -B build
           cmake --build build
 
-      - name: Test Lexer
-        run: ./build/tests/test_lexer
-            
-      - name: Test Parser
-        run: ./build/tests/test_parser
-
-      - name: Test Motor
-        run: ./build/tests/test_motor
-
-      - name: Test Valve
-        run: ./build/tests/test_valve
+      - name: Test
+        run: cd build && ctest --output-on-failure
