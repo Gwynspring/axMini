@@ -32,7 +32,7 @@ bool PersistenceManager::Load() {
 )");
     ofs << std::setw(4) << j << std::endl;
     ofs.close();
-    Logger::Info("File created at " + std::string(filepath_.filename()));
+    Logger::Info(filepath_.lexically_relative(std::filesystem::current_path()));
     return true;
   }
 

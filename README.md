@@ -8,7 +8,6 @@
 
 axMini is a lightweight soft-PLC backend written in C++20. It features its own DSL, a thread-safe variable engine, and a scan cycle. Together, these elements demonstrate the core architecture of an industrial automation system.
 
-HTTP_Client → REST_API → Lexer → Parser → DslRuntime
 ```mermaid
 graph TD
     DSL_Input[DSL Input] --> Lexer
@@ -47,39 +46,118 @@ cmake -B build
 cmake --build build
 ```
 
-### Run
-
-To start the engine run the following command in the terminal:
+#### 1\. Start server 
 
 ```bash
-./build/axMini
+./build/src/axMini
 ```
 
-### API Examples
-
-Open up two terminal windows. In one window run:
+When no Json file for storing variables and statements is specified a file is created by default.
 
 ```bash
-./build/axMini
+❯ ./src/axMini
+[2026-04-20 22:47:00.800] [axLogger] [info] ../data/state.json
 ```
 
-In the second window, read a variable:
+---
+
+#### 2\. Check initial state
 
 ```bash
-curl http://localhost:8080/variables/input_test
-# {"name":"input_test","value":42,"variable_typ":"Input"}
+curl http://localhost:8080/variables/motor_1.speed
+# {"name":"motor_1.speed","value":0,"variable_typ":"Output"}
+
+curl http://localhost:8080/variables/valve_1.is_open
+# {"name":"valve_1.is_open","value":false,"variable_typ":"Output"}
+
+curl http://localhost:8080/variables/motor_1.running
+# {"name":"motor_1.running","value":false,"variable_typ":"Output"} 
 ```
 
-To update a variable:
+---
+
+#### 3\. Write variables 
 
 ```bash
-curl -X PUT http://localhost:8080/variables/input_test \
+# Set motor speed to 150 
+curl -X PUT http://localhost:8080/variables/motor_1.speed \
      -H "Content-Type: application/json" \
-     -d '{"value": 99}'
-# {"value":99}
+     -d '{"value": 150}'
+# {"value":150}
 
-curl http://localhost:8080/variables/input_test
-# {"name":"input_test","value":99,"variable_typ":"Input"}
+# Start motor
+curl -X PUT http://localhost:8080/variables/motor_1.running \
+     -H "Content-Type: application/json" \
+     -d '{"value": true}'
+# {"value":true}
+```
+
+---
+
+#### 4\. Check values after writing
+
+```bash
+curl http://localhost:8080/variables/motor_1.speed
+# {"name":"motor_1.speed","value":150,"variable_typ":"Output"}
+
+# Valve should be true (because IF motor_1.speed > 100)
+curl http://localhost:8080/variables/valve_1.is_open
+# {"name":"valve_1.is_open","value":true,"variable_typ":"Output"}
+```
+
+---
+
+#### 5\. DSL zur Laufzeit hinzufügen
+
+```bash
+curl -X POST http://localhost:8080/dsl/if \
+     -d 'IF motor_1.speed < 200 THEN motor_1.running = false; END_IF;'
+# {"status": "ok"}
+
+curl http://localhost:8080/variables/valve_1.is_open
+# {"name":"valve_1.is_open","value":false,"variable_typ":"Output"}
+```
+
+---
+
+#### 6\. Save 
+
+```bash
+# First check states before saving again
+curl http://localhost:8080/variables/motor_1.speed
+# {"name":"motor_1.speed","value":150,"variable_typ":"Output"}
+
+curl http://localhost:8080/variables/valve_1.is_open
+# {"name":"valve_1.is_open","value":false,"variable_typ":"Output"}
+
+# Then save the current state
+curl -X POST http://localhost:8080/save
+# {"status": "saved"}
+
+# The logger should track the safe command via http
+[2026-04-20 22:57:53.309] [axLogger] [info] Saving to: /path/of/your/install/axMini/data/state.json
+
+# Check file
+cat data/state.json
+```
+
+---
+
+#### 7\. New start test
+
+```bash
+# Stop server
+# Ctrl+C
+
+# Start server again
+./build/axMini
+
+# Check state 
+curl http://localhost:8080/variables/motor_1.speed
+# {"name":"motor_1.speed","value":150,"variable_typ":"Output"}
+
+curl http://localhost:8080/variables/valve_1.is_open
+# {"name":"valve_1.is_open","value":true,"variable_typ":"Output"}
 ```
 
 ## What I Learned

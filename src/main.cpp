@@ -16,10 +16,12 @@ int main() {
 
   Logger::Init();
 
-  std::string dsl =
-      "MOTOR motor_1;\n"
-      "VALVE valve_1;\n"
-      "IF motor_1.speed > 100 THEN valve_1.is_open = true; END_IF;\n";
+  std::string dsl_objects = "MOTOR motor_1;\n"
+                            "VALVE valve_1;\n";
+
+  std::string dsl_if =
+      "IF motor_1.speed > 100 THEN valve_1.is_open = true; END_IF;\n"
+      "IF motor_1.speed < 90 THEN valve_1.is_open = false; END_IF;\n";
 
   VariableEngine engine;
   DslRuntime runtime;
@@ -29,10 +31,13 @@ int main() {
   AutomationFactory factory;
   httplib::Server svr;
 
-  auto tokens = Lexer::Tokenize(dsl);
-  auto declarations = Parser::ParseObjectDeclarations(tokens);
+  auto tokens_obj = Lexer::Tokenize(dsl_objects);
+  auto tokens_if = Lexer::Tokenize(dsl_if);
+
+  auto declarations = Parser::ParseObjectDeclarations(tokens_obj);
   auto objects = factory.Create(declarations, engine);
-  runtime.AddStatements(Parser::ParseIfStatement(tokens));
+
+  runtime.AddStatements(Parser::ParseIfStatement(tokens_if), dsl_if);
 
   Variable input(VariableType::kInput, "input_test", 42);
   Variable output(VariableType::kOutput, "output_test", true);
