@@ -32,12 +32,13 @@ int main() {
   httplib::Server svr;
 
   auto tokens_obj = Lexer::Tokenize(dsl_objects);
-  auto tokens_if = Lexer::Tokenize(dsl_if);
-
   auto declarations = Parser::ParseObjectDeclarations(tokens_obj);
   auto objects = factory.Create(declarations, engine);
 
-  runtime.AddStatements(Parser::ParseIfStatement(tokens_if), dsl_if);
+  if (runtime.GetStatements().empty()) {
+    auto tokens_if = Lexer::Tokenize(dsl_if);
+    runtime.AddStatements(Parser::ParseIfStatement(tokens_if), dsl_if);
+  }
 
   Variable input(VariableType::kInput, "input_test", 42);
   Variable output(VariableType::kOutput, "output_test", true);

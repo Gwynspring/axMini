@@ -1,11 +1,3 @@
-/*
-1. Prüfe ob filepath_ existiert
-2. Wenn nicht → leere Datei erstellen → return true
-3. Wenn ja → Datei öffnen und als JSON parsen
-4. Variablen laden → engine_.AddVariable(...)
-5. DSL Strings laden → Lexer → Parser → runtime_.AddStatements(...)
-6. return true bei Erfolg, false bei Fehler*/
-
 #include "axMini/PersistenceManager.hpp"
 #include "axMini/Lexer.hpp"
 #include "axMini/Logger.hpp"
@@ -20,7 +12,7 @@ bool PersistenceManager::Load() {
     std::filesystem::create_directories(filepath_.parent_path());
     std::ofstream ofs(filepath_);
     if (!ofs.is_open()) {
-      Logger::Error("Coul not write to file " +
+      Logger::Error("Could not write to file " +
                     std::string(filepath_.filename()));
       return false;
     }
@@ -66,7 +58,7 @@ bool PersistenceManager::Load() {
 
     for (const auto &dsl_str : j["dsl"]) {
       auto tokens = Lexer::Tokenize(dsl_str);
-      runtime_.AddStatements(Parser::ParseIfStatement(tokens));
+      runtime_.AddStatements(Parser::ParseIfStatement(tokens), dsl_str);
     }
 
     return true;
@@ -84,7 +76,9 @@ bool PersistenceManager::Save() {
   j["variables"] = nlohmann::json::array();
   j["dsl"] = nlohmann::json::array();
 
-  for (const auto &var : engine_.GetAllVariables()) {
+  auto variables = engine_.GetAllVariables();
+
+  for (const auto &var : variables) {
     nlohmann::json j_var;
     std::visit([&j_var](auto val) { j_var["value"] = val; }, var.value);
     j_var["name"] = var.name;
@@ -100,12 +94,11 @@ bool PersistenceManager::Save() {
   if (ofs.is_open()) {
     ofs << std::setw(4) << j;
     ofs.close();
+    Logger::Info("Saving to: " + filepath_.string());
+    Logger::Info("Variables count: " + std::to_string(variables.size()));
   } else {
     Logger::Error("Could not open file for saving");
     return false;
   }
-  Logger::Info("Saving to: " + filepath_.string());
-  Logger::Info("Variables count: " +
-               std::to_string(engine_.GetAllVariables().size()));
   return true;
 }

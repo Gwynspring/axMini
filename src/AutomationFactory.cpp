@@ -1,8 +1,6 @@
 #include "axMini/AutomationFactory.hpp"
 #include "axMini/Motor.hpp"
 #include "axMini/Valve.hpp"
-#include <memory>
-#include <vector>
 
 std::vector<std::unique_ptr<AutomationObject>>
 AutomationFactory::Create(const std::vector<ObjectDeclaration> &declarations,

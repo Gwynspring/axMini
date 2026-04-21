@@ -103,7 +103,7 @@ std::vector<Token> Lexer::Tokenize(const std::string &input) {
           token.push_back(Token(TokenType::kBoolValue, word));
         } else if (IsNumber(word)) {
           token.push_back(Token(TokenType::kIntValue, word));
-        } else if (IsFloat(word)) {
+        } else if (word.find('.') != std::string::npos && IsFloat(word)) {
           token.push_back(Token(TokenType::kFloatValue, word));
         } else {
           token.push_back(Token(TokenType::kIdentifier, word));
